@@ -1,0 +1,154 @@
+{
+  "name": "wiki-browser",
+  "version": "0.0.5",
+  "description": "A Browser to browse your Wiki",
+  "main": "./build/main.js",
+  "scripts": {
+    "start": "webpack --config ./webpack.main.js --mode development && concurrently \"electron ./build/main.js\"",
+    "dist": "npm run build && electron-builder -p always",
+    "clean": "rm -rf node_modules build dist",
+    "lint": "eslint .",
+    "build": "webpack --config ./webpack.main.js --mode production"
+  },
+  "author": "Johannes Wielsch <johannes@wielsch.xyz>",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "build": {
+    "appId": "org.xwiki.xwiki-browser",
+    "productName": "XWiki Browser",
+    "generateUpdatesFilesForAllChannels": true,
+    "afterSign": "./notarize.js",
+    "npmRebuild": false,
+    "files": [
+      "build",
+      "resources",
+      "!main.js"
+    ],
+    "mac": {
+      "artifactName": "xwiki-browser.${ext}",
+      "target": [
+        {
+          "arch": "universal",
+          "target": "dmg"
+        },
+        {
+          "arch": "universal",
+          "target": "zip"
+        }
+      ],
+      "category": "public.app-category.productivity",
+      "darkModeSupport": true,
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
+      "asarUnpack": "**/*.node",
+      "notarize": false,
+      "extendInfo": {
+        "LSMultipleInstancesProhibited": true
+      }
+    },
+    "mas": {
+      "entitlements": "resources/entitlements.mas.plist",
+      "entitlementsInherit": "resources/entitlements.mas.inherit.plist",
+      "hardenedRuntime": false
+    },
+    "linux": {
+      "artifactName": "xwiki-browser-${arch}.${ext}",
+      "category": "XWiki;Browser",
+      "description": "XWiki Browser",
+      "desktop": {
+        "Comment[de]": "XWiki Browser"
+      },
+      "executableName": "xwiki-browser",
+      "target": [
+        {
+          "arch": "x64",
+          "target": "AppImage"
+        },
+        {
+          "arch": "x64",
+          "target": "deb"
+        },
+        {
+          "arch": "arm64",
+          "target": "AppImage"
+        },
+        {
+          "arch": "arm64",
+          "target": "deb"
+        }
+      ]
+    },
+    "deb": {
+      "depends": [
+        "libgtk-3-0",
+        "libnss3",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1"
+      ]
+    },
+    "win": {
+      "artifactName": "xwiki-browser.${ext}",
+      "target": [
+        {
+          "arch": [
+            "ia32",
+            "x64"
+          ],
+          "target": "nsis"
+        }
+      ]
+    },
+    "directories": {
+      "buildResources": "resources"
+    },
+    "protocols": [
+      {
+        "name": "xwiki-protocol",
+        "role": "Viewer",
+        "schemes": [
+          "xwiki"
+        ]
+      }
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/knowledgebase-consulting/xwiki-browser"
+  },
+  "keywords": [
+    "xwiki",
+    "electron"
+  ],
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "electron-debug": "^3.2.0",
+    "electron-log": "^5.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "5.1.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "electron": "^27.1.2",
+    "electron-builder": "^24.9.1",
+    "electron-is-dev": "^2.0.0",
+    "electron-notarize": "1.2.2",
+    "electron-reload": "^1.5.0",
+    "electron-updater": "^6.1.7",
+    "eslint": "^8.54.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
