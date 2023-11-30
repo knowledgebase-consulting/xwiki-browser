@@ -139,7 +139,7 @@
     "electron-log": "^5.0.1"
   },
   "devDependencies": {
-    "concurrently": "5.1.0",
+    "concurrently": "8.2.2",
     "copy-webpack-plugin": "^11.0.0",
     "electron": "^27.1.2",
     "electron-builder": "^24.9.1",
