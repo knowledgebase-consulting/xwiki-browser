@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
-const { createMenu } = require('./build/resources/menu/menu.js');
+const { createMenu } = require('./resources/menu/menu.js');
 /* const { autoUpdater } = require('electron-updater'); */
 const isDev = require('electron-is-dev');
 const process = require('process');
