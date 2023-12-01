@@ -1,6 +1,6 @@
 {
   "name": "wiki-browser",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A Browser to browse your Wiki",
   "main": "./build/main.js",
   "scripts": {
