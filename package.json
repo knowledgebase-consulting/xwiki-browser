@@ -1,6 +1,6 @@
 {
   "name": "wiki-browser",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A Browser to browse your Wiki",
   "main": "./build/main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "npmRebuild": false,
     "files": [
       "build",
-      "resources",
+      "!resources",
       "!main.js"
     ],
     "mac": {

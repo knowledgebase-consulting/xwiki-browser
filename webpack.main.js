@@ -4,8 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
     target: 'electron-main',
     entry: { main: './main.js',
-             preload: './resources/preload/preload.js',
-             createMenu: './resources/menu/menu.js' 
+             preload: './preload.js',
     },
     output: {
         path: path.resolve('./build'),
