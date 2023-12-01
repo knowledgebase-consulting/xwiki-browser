@@ -21,79 +21,114 @@ let settings = loadSettings();
 
 // Funktion zum Laden der Benutzereinstellungen
 function loadSettings() {
-  if (fs.existsSync(settingsPath)) {
-    return JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+  try {
+    if (fs.existsSync(settingsPath)) {
+      const settingsData = fs.readFileSync(settingsPath, 'utf-8');
+      return JSON.parse(settingsData);
+    }
+    return {};
+  } catch (error) {
+    console.error('Fehler beim Laden der Einstellungen: ', error);
+    return {};
   }
-  return {};
 }
 
 // Funktion zum Speichern der Benutzereinstellungen
 function saveSettings(settings) {
-  fs.writeFileSync(settingsPath, JSON.stringify(settings));
+  try {
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  } catch (error) {
+    console.error('Fehler beim Speichern der Einstellungen: ', error);
+  }
 }
 
 // Funktion zum Erstellen des Hauptfensters
 function createMainWindow() {
-  const basePath = isDev ? __dirname : app.getAppPath();
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    fullscreen: settings.fullscreen || false,
-    webPreferences: {
-      preload: path.resolve(basePath, './build/preload.js'),
-      contextIsolation: false,
-      nodeIntegration: false
-    }
-  });
+  try {
+    const basePath = isDev ? __dirname : app.getAppPath();
+    mainWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      fullscreen: settings.fullscreen || false,
+      webPreferences: {
+        preload: path.resolve(basePath, './build/preload.js'),
+        contextIsolation: false,
+        nodeIntegration: false
+      }
+    });
 
-  mainWindow.loadURL('https://www.wielsch.xyz');
-  mainWindow.on('closed', function () {
-    mainWindow = null;
-  });
-  /* if (!process.mas) {
-    autoUpdater.checkForUpdatesAndNotify();
-} */
+    mainWindow.loadURL('https://www.wielsch.xyz').catch(error => {
+      console.error('Fehler beim Laden der URL: ', error);
+    });
+    mainWindow.on('closed', function () {
+      mainWindow = null;
+    });
+    /* if (!process.mas) {
+      autoUpdater.checkForUpdatesAndNotify();
+    } */
+  } catch (error) {
+    console.error('Fehler beim Erstellen des Hauptfensters: ', error);
+  }
 }
 
 // Funktion zum Erstellen des Einstellungsfensters
 function createSettingsWindow() {
-  const basePath = isDev ? __dirname : app.getAppPath();
-  const mainWindowBounds = mainWindow.getBounds();
-  const settingsWindowWidth = Math.min(800, mainWindowBounds.width * 0.8);
-  const settingsWindowHeight = Math.min(600, mainWindowBounds.height * 0.8);
+  try {
+    const basePath = isDev ? __dirname : app.getAppPath();
+    const mainWindowBounds = mainWindow.getBounds();
+    const settingsWindowWidth = Math.min(800, mainWindowBounds.width * 0.8);
+    const settingsWindowHeight = Math.min(600, mainWindowBounds.height * 0.8);
     settingsWindow = new BrowserWindow({
-    width: settingsWindowWidth,
-    height: settingsWindowHeight,
-    x: mainWindowBounds.x + (mainWindowBounds.width - settingsWindowWidth) / 2,
-    y: mainWindowBounds.y + (mainWindowBounds.height - settingsWindowHeight) / 2,
-    parent: mainWindow,
-    modal: true,
-    show: true,
-    webPreferences: {
-      preload: path.resolve(basePath, './build/preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false
-    }
-  });
+      width: settingsWindowWidth,
+      height: settingsWindowHeight,
+      x: mainWindowBounds.x + (mainWindowBounds.width - settingsWindowWidth) / 2,
+      y: mainWindowBounds.y + (mainWindowBounds.height - settingsWindowHeight) / 2,
+      parent: mainWindow,
+      modal: true,
+      show: true,
+      webPreferences: {
+        preload: path.resolve(basePath, './build/preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false
+      }
+    });
 
-  settingsWindow.loadFile('./resources/settings/html/settings.html');
-
+    settingsWindow.loadFile('./resources/settings/html/settings.html').catch(error => {
+      console.error('Fehler beim Laden der Einstellungsdatei: ', error);
+    });
+  } catch (error) {
+    console.error('Fehler beim Erstellen des Einstellungsfensters: ', error);
+  }
 }
 
 // Event-Listener für die Electron-App
 app.on('ready', () => {
-  createMainWindow();
-  const menu = createMenu(createSettingsWindow, settingsWindow);
-  Menu.setApplicationMenu(menu);
+  try {
+    createMainWindow();
+    const menu = createMenu(createSettingsWindow, settingsWindow);
+    if (menu) {
+      Menu.setApplicationMenu(menu);
+    } else {
+      throw new Error('Menü konnte nicht erstellt werden');
+    }
+  } catch (error) {
+    console.error('Fehler beim App-Start: ', error);
+  }
 });
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
+
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createMainWindow();
+  try {
+    if (mainWindow === null) {
+      createMainWindow();
+    }
+  } catch (error) {
+    console.error('Fehler beim Reaktivieren der App: ', error);
   }
 });
 
@@ -107,8 +142,12 @@ ipcMain.on('close-settings-window', () => {
 });
 
 ipcMain.on('set-fullscreen', (event, value) => {
-  settings.fullscreen = value;
-  saveSettings(settings);
+  try {
+    settings.fullscreen = value;
+    saveSettings(settings);
+  } catch (error) {
+    console.error('Fehler beim Setzen des Vollbildmodus: ', error);
+  }
 });
 
 ipcMain.on('get-fullscreen-setting', (event) => {
@@ -146,5 +185,11 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
 });
 
 ipcMain.handle('get-app-version', () => {
-  return app.getVersion();
+  try {
+    return app.getVersion();
+  } catch (error) {
+    console.error('Fehler beim Abrufen der App-Version: ', error);
+    return '';
+  }
 });
+
