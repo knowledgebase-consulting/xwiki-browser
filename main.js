@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
-const { createMenu } = require('./resources/menu/menu.js');
+const { createMenu } = require('./build/resources/menu/menu.js');
 /* const { autoUpdater } = require('electron-updater'); */
 const isDev = require('electron-is-dev');
 const process = require('process');
@@ -105,17 +105,46 @@ ipcMain.on('close-settings-window', () => {
     settingsWindow = null;
   }
 });
+
 ipcMain.on('set-fullscreen', (event, value) => {
   settings.fullscreen = value;
   saveSettings(settings);
 });
+
 ipcMain.on('get-fullscreen-setting', (event) => {
   event.reply('fullscreen-setting', settings.fullscreen);
 });
+
 ipcMain.handle('get-menu-items', async (event) => {
   const basePath = isDev ? __dirname : app.getAppPath();
   const menuPath = path.resolve(basePath, './resources/settings/items');
-  const files = await fs.promises.readdir(menuPath);
-  return files.filter(file => file.endsWith('.html')).map(file => file.replace('.html', ''));
+  try {
+    const files = await fs.promises.readdir(menuPath);
+    return files.filter(file => file.endsWith('.html')).map(file => file.replace('.html', ''));
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 });
 
+ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
+  const basePath = isDev ? __dirname : app.getAppPath();
+  const menuPath = path.resolve(basePath, './resources/settings/items');
+  const packageJson = require('./package.json');
+  const filePath = path.join(menuPath, `${menuItem}.html`);
+  try {
+    let content = await fs.promises.readFile(filePath, 'utf8');
+    if (menuItem === 'information') {
+      content = content.replace('[ELECTRON-VERSION]', app.getVersion());
+      content = content.replace('[VERSION]', packageJson.version);
+    }
+    return content;
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
+});
+
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
+});

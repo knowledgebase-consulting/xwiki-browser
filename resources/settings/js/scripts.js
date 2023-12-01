@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    window.electronAPI.closeSettingsWindow();
+  });
+
   const sidebar = document.querySelector('.sidebar ul');
   loadMenuItems(sidebar);
 
@@ -9,10 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('closeSettings').addEventListener('click', () => {
-    window.electronAPI.closeSettingsWindow();
-  });
+});
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const version = await window.electronAPI.getAppVersion();
+  document.getElementById('appVersion').textContent = version;
 });
 
 function initializeSettings() {
@@ -24,19 +29,6 @@ function initializeSettings() {
   }
 }
 
-function loadMenuItem(item) {
-  const content = document.querySelector('.content');
-  fetch(`../items/${item}.html`)
-    .then(response => response.text())
-    .then(html => {
-      content.innerHTML = html;
-      if (item === 'anzeige') {
-        initializeSettings();
-      }
-    });
-}
-
-
 async function loadMenuItems(sidebar) {
   const menuItems = await window.menuAPI.getMenuItems();
     
@@ -47,3 +39,14 @@ async function loadMenuItems(sidebar) {
     sidebar.appendChild(li);
   });
 }
+
+async function loadMenuItem(item) {
+  const content = document.querySelector('.content');
+  try {
+    const html = await window.menuAPI.getMenuItemContent(item);
+    content.innerHTML = html;
+  } catch (error) {
+    console.error('Fehler beim Laden des Menüpunkts:', error);
+  }
+}
+
