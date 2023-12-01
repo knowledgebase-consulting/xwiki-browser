@@ -106,11 +106,7 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    if (menu) {
-      Menu.setApplicationMenu(menu);
-    } else {
-      throw new Error('Menü konnte nicht erstellt werden');
-    }
+    Menu.setApplicationMenu(menu);
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
   }
