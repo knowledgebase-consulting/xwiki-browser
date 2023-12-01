@@ -2,10 +2,20 @@ const { contextBridge, ipcRenderer, app } = require('electron');
 
 contextBridge.exposeInMainWorld('menuAPI', {
   getMenuItems: async () => {
-    return await ipcRenderer.invoke('get-menu-items');
+    try {
+      return await ipcRenderer.invoke('get-menu-items');
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Menüpunkte: ', error);
+      return [];
+    }
   },
   getMenuItemContent: async (menuItem) => {
-    return await ipcRenderer.invoke('get-menu-item-content', menuItem);
+    try {
+      return await ipcRenderer.invoke('get-menu-item-content', menuItem);
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Inhalts eines Menüpunkts: ', error);
+      return '';
+    }
   }
 });
 
