@@ -1,7 +1,7 @@
 {
-  "name": "wiki-browser",
-  "version": "0.0.7",
-  "description": "A Browser to browse your Wiki",
+  "name": "xwiki-browser",
+  "version": "0.0.8",
+  "description": "The browser to browse your XWiki",
   "main": "./build/main.js",
   "scripts": {
     "start": "webpack --config ./webpack.main.js --mode development && concurrently \"electron ./build/main.js\"",
@@ -13,7 +13,7 @@
   "author": "Johannes Wielsch <johannes@wielsch.xyz>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "build": {
     "appId": "org.xwiki.xwiki-browser",
