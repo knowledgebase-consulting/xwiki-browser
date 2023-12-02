@@ -170,7 +170,7 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   try {
     let content = await fs.promises.readFile(filePath, 'utf8');
     if (menuItem === 'information') {
-      content = content.replace('[ELECTRON-VERSION]', app.getVersion());
+      content = content.replace('[ELECTRONVERSION]', app.getVersion());
       content = content.replace('[VERSION]', packageJson.version);
     }
     return content;
