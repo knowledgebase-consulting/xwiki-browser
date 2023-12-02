@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
 const { createMenu } = require('./resources/menu/menu.js');
-/* const { autoUpdater } = require('electron-updater'); */
+const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -63,9 +63,9 @@ function createMainWindow() {
     mainWindow.on('closed', function () {
       mainWindow = null;
     });
-    /* if (!process.mas) {
+    if (!process.mas) {
       autoUpdater.checkForUpdatesAndNotify();
-    } */
+    } 
   } catch (error) {
     console.error('Fehler beim Erstellen des Hauptfensters: ', error);
   }
@@ -170,7 +170,6 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   try {
     let content = await fs.promises.readFile(filePath, 'utf8');
     if (menuItem === 'information') {
-      content = content.replace('[ELECTRONVERSION]', app.getVersion());
       content = content.replace('[VERSION]', packageJson.version);
     }
     return content;
