@@ -18,8 +18,7 @@ jobs:
       with:
         node-version: '18'
     - name: Get branch name
-      id: get_branch
-      run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
     - name: Update package.json version
       run: |
         echo "Setting package.json version to $BRANCH_NAME"
@@ -51,8 +50,7 @@ jobs:
       with:
         node-version: '18'
     - name: Get branch name
-      id: get_branch
-      run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
     - name: Update package.json version
       run: |
         echo "Setting package.json version to $BRANCH_NAME"
@@ -82,13 +80,13 @@ jobs:
       with:
         node-version: '18'
     - name: Get branch name
-      id: get_branch
-      run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
     - name: Update package.json version
       run: |
         echo "Setting package.json version to $BRANCH_NAME"
         jq '.version = "'"$BRANCH_NAME"'"' package.json > package_temp.json
-        mv package_temp.json package.json
+        Move-Item -Path package_temp.json -Destination package.json -Force
+      shell: pwsh
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
