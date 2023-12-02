@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
 const { createMenu } = require('./resources/menu/menu.js');
-/* const { autoUpdater } = require('electron-updater'); */
+const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -52,7 +52,7 @@ function createMainWindow() {
       fullscreen: settings.fullscreen || false,
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
-        contextIsolation: false,
+        contextIsolation: true,
         nodeIntegration: false
       }
     });
@@ -63,9 +63,9 @@ function createMainWindow() {
     mainWindow.on('closed', function () {
       mainWindow = null;
     });
-    /* if (!process.mas) {
+    if (!process.mas) {
       autoUpdater.checkForUpdatesAndNotify();
-    } */
+    } 
   } catch (error) {
     console.error('Fehler beim Erstellen des Hauptfensters: ', error);
   }
