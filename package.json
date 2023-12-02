@@ -5,7 +5,7 @@
   "main": "./build/main.js",
   "scripts": {
     "start": "webpack --config ./webpack.main.js --mode development && concurrently \"electron ./build/main.js\"",
-    "dist": "npm run build && electron-builder -p always",
+    "dist": "npm run build && electron-builder",
     "clean": "rm -rf node_modules build dist",
     "lint": "eslint .",
     "build": "webpack --config ./webpack.main.js --mode production"
