@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sidebar = document.querySelector('.sidebar ul');
   try {
     await loadMenuItems(sidebar);
-    loadMenuItem('information'); 
+    loadMenuItem('informationen'); 
   } catch (error) {
     console.error('Fehler beim Laden der Menüelemente:', error);
   }
@@ -20,12 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Load app version
-  const version = await window.electronAPI.getAppVersion();
-  document.getElementById('appVersion').textContent = version;
-
-  // Initialize settings
-  initializeSettings();
 });
 
 async function loadMenuItems(sidebar) {

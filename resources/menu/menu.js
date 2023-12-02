@@ -107,7 +107,11 @@ function createMenu(createSettingsWindow, settingsWindow) {
         }*/
     ]
     
-    return Menu.buildFromTemplate(template);
+    if (isMac) {
+        return Menu.buildFromTemplate(template);
+    } else {
+        Menu.setApplicationMenu(null);
+    }
 }
 
 module.exports = { createMenu };

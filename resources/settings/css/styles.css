@@ -5,6 +5,9 @@ body {
   display: flex;
   height: 100vh;
 }
+a {
+  color: orange;
+}
 .sidebar {
   flex-shrink: 0;
   width: 150px;
@@ -21,17 +24,20 @@ body {
 }
 .sidebar h2 {
   font-size: 20px;
-  margin-top: 0px;
+  margin-top: 22px;
 }
 ul {
   list-style: none;
   padding: 0;
 }
 ul li {
-  padding: 10px 0;
+  padding: 7px 0;
   cursor: pointer;
 }
 ul li:hover {
+  background-color: #ddd;
+}
+ul li:active {
   background-color: #ddd;
 }
 .footer {
