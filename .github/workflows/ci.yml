@@ -17,11 +17,13 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
+    - name: Get branch name
+      id: get_branch
+      run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
     - name: Update package.json version
       run: |
-        PACKAGE_VERSION=$(git describe --tags --abbrev=0)
-        echo "Setting package.json version to $PACKAGE_VERSION"
-        jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
+        echo "Setting package.json version to $BRANCH_NAME"
+        jq '.version = "'"$BRANCH_NAME"'"' package.json > package_temp.json
         mv package_temp.json package.json
     - name: Build it
       env:
