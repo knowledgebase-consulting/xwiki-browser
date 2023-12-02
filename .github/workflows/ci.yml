@@ -17,13 +17,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
-    - name: Get branch name
-      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
-    - name: Update package.json version
-      run: |
-        echo "Setting package.json version to $BRANCH_NAME"
-        jq '.version = "'"$BRANCH_NAME"'"' package.json > package_temp.json
-        mv package_temp.json package.json
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,13 +42,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
-    - name: Get branch name
-      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
-    - name: Update package.json version
-      run: |
-        echo "Setting package.json version to $BRANCH_NAME"
-        jq '.version = "'"$BRANCH_NAME"'"' package.json > package_temp.json
-        mv package_temp.json package.json
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,14 +65,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
-    - name: Get branch name
-      run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
-    - name: Update package.json version
-      run: |
-        echo "Setting package.json version to $BRANCH_NAME"
-        jq '.version = "'"$BRANCH_NAME"'"' package.json > package_temp.json
-        Move-Item -Path package_temp.json -Destination package.json -Force
-      shell: pwsh
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
