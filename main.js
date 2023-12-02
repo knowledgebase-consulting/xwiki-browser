@@ -47,12 +47,12 @@ function createMainWindow() {
   try {
     const basePath = isDev ? __dirname : app.getAppPath();
     mainWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 1200,
+      height: 900,
       fullscreen: settings.fullscreen || false,
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
-        contextIsolation: false,
+        contextIsolation: true,
         nodeIntegration: false
       }
     });
