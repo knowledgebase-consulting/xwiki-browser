@@ -52,7 +52,7 @@ function createMainWindow() {
       fullscreen: settings.fullscreen || false,
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
-        contextIsolation: true,
+        contextIsolation: false,
         nodeIntegration: false
       }
     });
