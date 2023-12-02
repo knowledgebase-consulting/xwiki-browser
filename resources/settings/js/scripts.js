@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sidebar = document.querySelector('.sidebar ul');
   try {
     await loadMenuItems(sidebar);
+    loadMenuItem('information'); 
   } catch (error) {
     console.error('Fehler beim Laden der Menüelemente:', error);
   }
