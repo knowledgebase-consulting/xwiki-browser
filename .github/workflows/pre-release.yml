@@ -25,13 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: nyaa8/package-version@v1.0.3
-      - name: Update package.json version
-        run: |
-          PACKAGE_VERSION=$(git describe --tags --abbrev=0)
-          echo "Setting package.json version to $PACKAGE_VERSION"
-          jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
-          mv package_temp.json package.json
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
