@@ -17,6 +17,12 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
+    - name: Update package.json version
+      run: |
+        PACKAGE_VERSION=$(git describe --tags --abbrev=0)
+        echo "Setting package.json version to $PACKAGE_VERSION"
+        jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
+        mv package_temp.json package.json
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,6 +48,12 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
+    - name: Update package.json version
+      run: |
+        PACKAGE_VERSION=$(git describe --tags --abbrev=0)
+        echo "Setting package.json version to $PACKAGE_VERSION"
+        jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
+        mv package_temp.json package.json
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,6 +77,12 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '18'
+    - name: Update package.json version
+      run: |
+        PACKAGE_VERSION=$(git describe --tags --abbrev=0)
+        echo "Setting package.json version to $PACKAGE_VERSION"
+        jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
+        mv package_temp.json package.json
     - name: Build it
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

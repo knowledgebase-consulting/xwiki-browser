@@ -21,6 +21,7 @@ body {
 }
 .sidebar h2 {
   font-size: 20px;
+  margin-top: 0px;
 }
 ul {
   list-style: none;

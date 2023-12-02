@@ -70,6 +70,20 @@ function createMenu(createSettingsWindow, settingsWindow) {
                 ]
             },
             {
+            label: 'Anzeige',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forceReload' },
+                { role: 'toggleDevTools' },
+                { type: 'separator' },
+                { role: 'resetZoom' },
+                { role: 'zoomIn' },
+                { role: 'zoomOut' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' }
+            ]
+            },
+            {
                 label: '&Fenster',
                 role: 'window',
                 submenu: [

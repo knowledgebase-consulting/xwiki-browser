@@ -25,6 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: nyaa8/package-version@v1.0.3
+      - name: Update package.json version
+        run: |
+          PACKAGE_VERSION=$(git describe --tags --abbrev=0)
+          echo "Setting package.json version to $PACKAGE_VERSION"
+          jq '.version = "'"$PACKAGE_VERSION"'"' package.json > package_temp.json
+          mv package_temp.json package.json
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
@@ -47,7 +54,7 @@ jobs:
             dist/latest-mac.yml
             dist/xwiki-browser.exe
             dist/latest.yml
-      - uses: "softprops/action-gh-release@v0.1.14"
+      - uses: "softprops/action-gh-release@v0.1.15"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: 'v${{ env.PACKAGE_VERSION }}'
