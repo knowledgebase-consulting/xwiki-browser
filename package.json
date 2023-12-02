@@ -1,6 +1,6 @@
 {
   "name": "xwiki-browser",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "The browser to browse your XWiki",
   "main": "./build/main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "npmRebuild": false,
     "files": [
       "build",
-      "!resources",
+      "resources",
       "!main.js"
     ],
     "mac": {
