@@ -4,6 +4,7 @@ async function initializeSettings() {
   await initializeXWikiServerSettings();
 }
 
+// Initialisieren der Vollbildschirm-Einstellungen
 async function initializeFullScreenSettings() {
   const fullscreenCheckbox = document.getElementById('fullscreenCheckbox');
   if (fullscreenCheckbox) {
@@ -15,7 +16,6 @@ async function initializeFullScreenSettings() {
 // Initialisieren der XWiki-Server-Einstellungen
 async function initializeXWikiServerSettings() {
   const xwikiServerInput = document.getElementById('xwikiServerUrl');
-  console.log('XWiki Server Input:', xwikiServerInput);
   if (xwikiServerInput) {
     try {
       const startUrl = await window.electronAPI.getStartUrl();
