@@ -1,10 +1,18 @@
-// Funktionen
+// Globale Initialisierung
+async function initialize() {
+  await initializeSettings();
+  setupEventListeners();
+  await loadMenuItems();
+  setVariableMenuItemContent('Informationen');
+}
+
+// Initialisierung der Einstellungen
 async function initializeSettings() {
   await initializeFullScreenSettings();
   await initializeXWikiServerSettings();
 }
 
-// Initialisieren der Vollbildschirm-Einstellungen
+// Initialisierung der Vollbild-Einstellungen
 async function initializeFullScreenSettings() {
   const fullscreenCheckbox = document.getElementById('fullscreenCheckbox');
   if (fullscreenCheckbox) {
@@ -13,52 +21,54 @@ async function initializeFullScreenSettings() {
   }
 }
 
-// Initialisieren der XWiki-Server-Einstellungen
+// Initialisierung der XWiki-Server-Einstellungen
 async function initializeXWikiServerSettings() {
   const xwikiServerInput = document.getElementById('xwikiServerUrl');
   if (xwikiServerInput) {
-    try {
-      const startUrl = await window.electronAPI.getStartUrl();
-      if (startUrl) {
-        xwikiServerInput.value = startUrl;
-      }
-    } catch (error) {
-      console.error('Fehler beim Laden der Start-URL:', error);
+    const startUrl = await window.electronAPI.getStartUrl();
+    xwikiServerInput.value = startUrl || '';
+  }
+}
+
+// Event Listener einrichten
+function setupEventListeners() {
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    window.electronAPI.closeSettingsWindow();
+  });
+
+  document.body.addEventListener('change', (event) => {
+    if (event.target.matches('#fullscreenCheckbox')) {
+      window.electronAPI.setFullscreen(event.target.checked);
     }
-  }
-}
+  });
 
-function isValidUrl(url) {
-  try {
-    const parsedUrl = new URL(url);
-    // Überprüfen, ob das Protokoll 'http' oder 'https' ist
-    const isValidProtocol = parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
-    // Überprüfen, ob die URL eine Domainendung besitzt (z.B. .de)
-    const hasValidTLD = /\.[a-z]{2,}$/.test(parsedUrl.hostname);
-
-    return isValidProtocol && hasValidTLD;
-  } catch (error) {
-    // Ungültige URL
-    return false;
-  }
-}
-
-
-// Event-Listener für den Speichern-Button
-async function setupSaveButtonListener() {
-  const xwikiSaveButton = await document.getElementById('saveXWikiServer');
+  // Event-Listener für den Speichern-Button (falls vorhanden)
+  const xwikiSaveButton = document.getElementById('saveXWikiServer');
+  if (xwikiSaveButton) {
     xwikiSaveButton.addEventListener('click', async () => {
       const url = document.getElementById('xwikiServerUrl').value;
       if (isValidUrl(url)) {
-        const result = await window.electronAPI.setStartUrl(url);
+        await window.electronAPI.setStartUrl(url);
       } else {
         console.error('Ungültige URL:', url);
       }
     });
+  }
+}
+
+// Überprüfen, ob es sich um eine gültige URL handelt
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 // Laden der Menüpunkte im Einstellungsfenster
-async function loadMenuItems(sidebar) {
+async function loadMenuItems() {
+  const sidebar = document.querySelector('.sidebar ul');
   try {
     const menuItems = await window.menuAPI.getMenuItems();
     menuItems.forEach(item => {
@@ -68,48 +78,23 @@ async function loadMenuItems(sidebar) {
       sidebar.appendChild(li);
     });
   } catch (error) {
-    throw new Error('Fehler beim Abrufen der Menüelemente: ' + error.message);
+    console.error('Fehler beim Laden der Menüelemente: ' + error.message);
   }
 }
 
-//Laden des Variablen Inhalte der einzlenen Menüpunkte im Einstellungsfenster
+// Laden des Inhalts der Menüpunkte
 async function setVariableMenuItemContent(item) {
   const content = document.querySelector('.content');
   try {
     const html = await window.menuAPI.getMenuItemContent(item);
     content.innerHTML = html;
     if (item === 'Anzeige' || item === 'Mein XWiki') {
-      initializeSettings();
-      if (item === 'Mein XWiki') {
-        setupSaveButtonListener();
-      }
+      await initializeSettings();
     }
   } catch (error) {
-    console.error('Fehler beim Laden des Menüpunkts:' + error.message);
+    console.error('Fehler beim Laden des Menüpunkts: ' + error.message);
   }
 }
 
-// Beim zeichnen des DOM
-document.addEventListener('DOMContentLoaded', async () => {
-
-  // Handler for closing settings window
-  document.getElementById('closeSettings').addEventListener('click', () => {
-    window.electronAPI.closeSettingsWindow();
-  });
-
-  // Load menu items
-  const sidebar = document.querySelector('.sidebar ul');
-  try {
-    await loadMenuItems(sidebar);
-    setVariableMenuItemContent('Informationen'); 
-  } catch (error) {
-    console.error('Fehler beim Laden der Menüelemente:' + error.message);
-  }
-
-  // Handler for fullscreen setting
-  document.body.addEventListener('change', (event) => {
-    if (event.target.matches('#fullscreenCheckbox')) {
-      window.electronAPI.setFullscreen(event.target.checked);
-    }
-  });
-});
+// Beim Laden des DOM
+document.addEventListener('DOMContentLoaded', initialize);

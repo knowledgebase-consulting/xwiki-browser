@@ -85,7 +85,7 @@ jobs:
       run: |
         $BRANCH_NAME = "${{ github.head_ref }}"
         echo "Setting package.json version to $BRANCH_NAME"
-        jq ('.version = "' + $BRANCH_NAME + '"') package.json > package_temp.json
+        jq ('version = "' + $BRANCH_NAME + '"') package.json > package_temp.json
         Move-Item -Path package_temp.json -Destination package.json -Force
       shell: pwsh
     - name: Build it
