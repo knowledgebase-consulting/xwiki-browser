@@ -45,8 +45,8 @@ function isValidUrl(url) {
 
 
 // Event-Listener für den Speichern-Button
-function setupSaveButtonListener() {
-  const xwikiSaveButton = document.getElementById('saveXWikiServer');
+async function setupSaveButtonListener() {
+  const xwikiSaveButton = await document.getElementById('saveXWikiServer');
     xwikiSaveButton.addEventListener('click', async () => {
       const url = document.getElementById('xwikiServerUrl').value;
       if (isValidUrl(url)) {
@@ -91,7 +91,6 @@ async function setVariableMenuItemContent(item) {
 
 // Beim zeichnen des DOM
 document.addEventListener('DOMContentLoaded', async () => {
-  await initializeSettings();
 
   // Handler for closing settings window
   document.getElementById('closeSettings').addEventListener('click', () => {
@@ -102,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sidebar = document.querySelector('.sidebar ul');
   try {
     await loadMenuItems(sidebar);
-    await setVariableMenuItemContent('Informationen'); 
+    setVariableMenuItemContent('Informationen'); 
   } catch (error) {
     console.error('Fehler beim Laden der Menüelemente:' + error.message);
   }
