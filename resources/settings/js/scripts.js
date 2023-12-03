@@ -85,7 +85,7 @@ async function setVariableMenuItemContent(item) {
       }
     }
   } catch (error) {
-    console.error('Fehler beim Laden des Menüpunkts:', error);
+    console.error('Fehler beim Laden des Menüpunkts:' + error.message);
   }
 }
 
@@ -102,9 +102,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sidebar = document.querySelector('.sidebar ul');
   try {
     await loadMenuItems(sidebar);
-    setVariableMenuItemContent('Informationen'); 
+    await setVariableMenuItemContent('Informationen'); 
   } catch (error) {
-    console.error('Fehler beim Laden der Menüelemente:', error);
+    console.error('Fehler beim Laden der Menüelemente:' + error.message);
   }
 
   // Handler for fullscreen setting
