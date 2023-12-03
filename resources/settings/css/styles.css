@@ -40,12 +40,22 @@ ul li:hover {
 ul li:active {
   background-color: #ddd;
 }
-.footer {
+.closeSettings {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #0078D7;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.closeSettings:hover {
+  background-color: #0056b3;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   padding: 10px;
   box-sizing: border-box;
   text-align: center;
@@ -118,4 +128,24 @@ input:checked + .slider:before {
 }
 .setting-label {
   margin-right: 10px;
+}
+#xwikiServerUrl {
+  width: calc(100% - 150px);
+  padding: 8px;
+  margin-right: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#saveXWikiServer {
+  width: 100px;
+  padding: 10px;
+  background-color: #0078D7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#saveXWikiServer:hover {
+  background-color: #0056b3;
 }
