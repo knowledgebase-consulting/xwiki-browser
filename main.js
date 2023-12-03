@@ -97,7 +97,7 @@ function createSettingsWindow() {
         nodeIntegration: false
       }
     });
-    // Einstellungen laden
+    // Einstellungsfenster laden
     settingsWindow.loadFile('./resources/settings/html/settings.html').catch(error => {
       console.error('Fehler beim Laden der Einstellungsdatei: ', error);
     });
