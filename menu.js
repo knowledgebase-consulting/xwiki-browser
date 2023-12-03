@@ -1,6 +1,6 @@
 const { app, ipcRenderer, Menu, MenuItem } = require('electron');
 const isMac = process.platform === 'darwin';
-const packageJson = require('../../package.json');
+const packageJson = require('./package.json');
 app.name = packageJson.build.productName;
 
 function createMenu(createSettingsWindow, settingsWindow) {

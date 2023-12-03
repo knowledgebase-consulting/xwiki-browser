@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer, app } = require('electron');
-
+//Übergabe der Menüpunkte im Einstellungsfenster
 contextBridge.exposeInMainWorld('menuAPI', {
   getMenuItems: async () => {
     try {
@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('menuAPI', {
       return [];
     }
   },
+  // Übergabe der Inhalte der Menüpunkte des Einstellungsfensters
   getMenuItemContent: async (menuItem) => {
     try {
       return await ipcRenderer.invoke('get-menu-item-content', menuItem);
@@ -18,13 +19,14 @@ contextBridge.exposeInMainWorld('menuAPI', {
     }
   }
 });
-
+// Verschiedene Handler für das Einstellungsfenster
 contextBridge.exposeInMainWorld('electronAPI', {
+  getStartUrl: () => ipcRenderer.invoke('get-start-url'),
+  setStartUrl: async (url) => await ipcRenderer.invoke('set-start-url', url),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   closeSettingsWindow: () => ipcRenderer.send('close-settings-window'),
   setFullscreen: (flag) => ipcRenderer.send('set-fullscreen', flag),
-  getFullscreenSetting: (callback) => {
-    ipcRenderer.send('get-fullscreen-setting');
-    ipcRenderer.once('fullscreen-setting', (event, value) => callback(value));
+  getFullscreenSetting: async () => {
+    return await ipcRenderer.invoke('get-fullscreen-setting');
   }
 });

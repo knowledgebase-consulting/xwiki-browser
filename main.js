@@ -1,24 +1,20 @@
+// Const initialisieren
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
-const { createMenu } = require('./resources/menu/menu.js');
+const { createMenu } = require('./menu.js');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
 const fs = require('fs');
-
 // Überprüfen, ob es sich um eine macOS-Plattform handelt
 const isMac = process.platform === 'darwin';
-
 // Pfad für die Speicherung der Benutzereinstellungen
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
-
 // Globale Referenzen auf die Haupt- und Einstellungsfenster
 let mainWindow;
 let settingsWindow;
-
 // Laden der Benutzereinstellungen beim Start
 let settings = loadSettings();
-
 // Funktion zum Laden der Benutzereinstellungen
 function loadSettings() {
   try {
@@ -32,7 +28,6 @@ function loadSettings() {
     return {};
   }
 }
-
 // Funktion zum Speichern der Benutzereinstellungen
 function saveSettings(settings) {
   try {
@@ -41,11 +36,15 @@ function saveSettings(settings) {
     console.error('Fehler beim Speichern der Einstellungen: ', error);
   }
 }
-
 // Funktion zum Erstellen des Hauptfensters
 function createMainWindow() {
   try {
+    // Laden der Start-URL oder nutzen des Standards
+    const settings = loadSettings();
+    const startUrl = settings.xwikiServerUrl || 'https://unternehmens-wiki.de/';
+    // Const für das Laden der preload
     const basePath = isDev ? __dirname : app.getAppPath();
+    // Starten des Hauptfensters
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 900,
@@ -56,28 +55,34 @@ function createMainWindow() {
         nodeIntegration: false
       }
     });
-
-    mainWindow.loadURL('https://www.wielsch.xyz').catch(error => {
+    // Aufrufen der Startseite beim Start
+    mainWindow.loadURL(startUrl).catch(error => {
       console.error('Fehler beim Laden der URL: ', error);
     });
+    // Entfernen des Fensters beim Schließen
     mainWindow.on('closed', function () {
       mainWindow = null;
     });
-    if (!process.mas) {
-      autoUpdater.checkForUpdatesAndNotify();
-    } 
+    //Fehlerbehandlung
   } catch (error) {
     console.error('Fehler beim Erstellen des Hauptfensters: ', error);
   }
+  // Electron-Update nutzen
+  if (!process.mas) {
+    autoUpdater.checkForUpdatesAndNotify();
+  } 
 }
-
 // Funktion zum Erstellen des Einstellungsfensters
 function createSettingsWindow() {
   try {
+    // Const für das Laden der preload
     const basePath = isDev ? __dirname : app.getAppPath();
+    // Größe des Hauptfensters abfragen
     const mainWindowBounds = mainWindow.getBounds();
+    // Größe des Einstellungsfensters setzen
     const settingsWindowWidth = Math.min(800, mainWindowBounds.width * 0.8);
     const settingsWindowHeight = Math.min(600, mainWindowBounds.height * 0.8);
+    // Einstellungsfenster anzeigen
     settingsWindow = new BrowserWindow({
       width: settingsWindowWidth,
       height: settingsWindowHeight,
@@ -92,16 +97,17 @@ function createSettingsWindow() {
         nodeIntegration: false
       }
     });
-
+    // Einstellungen laden
     settingsWindow.loadFile('./resources/settings/html/settings.html').catch(error => {
       console.error('Fehler beim Laden der Einstellungsdatei: ', error);
     });
+    //Fehlerbehandlung
   } catch (error) {
     console.error('Fehler beim Erstellen des Einstellungsfensters: ', error);
   }
 }
-
 // Event-Listener für die Electron-App
+// Das Hauptfenster starten und das Menü laden
 app.on('ready', () => {
   try {
     createMainWindow();
@@ -111,13 +117,13 @@ app.on('ready', () => {
     console.error('Fehler beim App-Start: ', error);
   }
 });
-
+// Auf dem Mac das Fenster nur schließen aber nicht das Programm beenden
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
-
+// Bei einem erneuten Starten das Fenster reaktivieren
 app.on('activate', () => {
   try {
     if (mainWindow === null) {
@@ -127,16 +133,15 @@ app.on('activate', () => {
     console.error('Fehler beim Reaktivieren der App: ', error);
   }
 });
-
-
 // IPC Event-Handler für die Kommunikation zwischen Renderer- und Hauptprozess
+// Beim Schließen des Einstellungsfensters dieses sauber beenden
 ipcMain.on('close-settings-window', () => {
   if (settingsWindow) {
     settingsWindow.close();
     settingsWindow = null;
   }
 });
-
+// Vollbildeinstellungen speichern
 ipcMain.on('set-fullscreen', (event, value) => {
   try {
     settings.fullscreen = value;
@@ -145,11 +150,22 @@ ipcMain.on('set-fullscreen', (event, value) => {
     console.error('Fehler beim Setzen des Vollbildmodus: ', error);
   }
 });
-
-ipcMain.on('get-fullscreen-setting', (event) => {
-  event.reply('fullscreen-setting', settings.fullscreen);
+// Vollbildeinstellungen laden und übergeben
+ipcMain.handle('get-fullscreen-setting', async () => {
+  return settings.fullscreen;
 });
-
+//Start-URL aus den Einstellungen speichern
+ipcMain.handle('set-start-url', async (event, url) => {
+  try {
+    settings.xwikiServerUrl = url;
+    saveSettings(settings);
+    return { status: 'success' };
+  } catch (error) {
+    console.error('Fehler beim Speichern der Start-URL:', error);
+    return { status: 'error', message: error.message };
+  }
+});
+//Die verfügbaren Menüpunkte in den Einstellngen laden
 ipcMain.handle('get-menu-items', async (event) => {
   const basePath = isDev ? __dirname : app.getAppPath();
   const menuPath = path.resolve(basePath, './resources/settings/items');
@@ -161,7 +177,7 @@ ipcMain.handle('get-menu-items', async (event) => {
     return [];
   }
 });
-
+// Den Inhalt der Menüpunkte in den Einstellungen übergeben
 ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   const basePath = isDev ? __dirname : app.getAppPath();
   const menuPath = path.resolve(basePath, './resources/settings/items');
@@ -169,7 +185,7 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   const filePath = path.join(menuPath, `${menuItem}.html`);
   try {
     let content = await fs.promises.readFile(filePath, 'utf8');
-    if (menuItem === 'informationen') {
+    if (menuItem === 'Informationen') {
       content = content.replace('[VERSION]', packageJson.version);
     }
     return content;
@@ -178,7 +194,7 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
     return '';
   }
 });
-
+// Laden der App-Version
 ipcMain.handle('get-app-version', () => {
   try {
     return app.getVersion();
@@ -187,4 +203,8 @@ ipcMain.handle('get-app-version', () => {
     return '';
   }
 });
-
+// Laden der Start-URL aus den Nutzer-Einstellungen
+ipcMain.handle('get-start-url', async () => {
+  let settings = loadSettings();
+  return settings.xwikiServerUrl;
+});
