@@ -185,7 +185,7 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   const filePath = path.join(menuPath, `${menuItem}.html`);
   try {
     let content = await fs.promises.readFile(filePath, 'utf8');
-    if (menuItem === 'Informationen') {
+    if (menuItem === 'informationen') {
       content = content.replace('[VERSION]', packageJson.version);
     }
     return content;

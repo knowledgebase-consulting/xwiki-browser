@@ -3,7 +3,7 @@ async function initialize() {
   await initializeSettings();
   setupEventListeners();
   await loadMenuItems();
-  setVariableMenuItemContent('Informationen');
+  setVariableMenuItemContent('informationen');
 }
 
 // Initialisierung der Einstellungen
@@ -88,7 +88,7 @@ async function setVariableMenuItemContent(item) {
   try {
     const html = await window.menuAPI.getMenuItemContent(item);
     content.innerHTML = html;
-    if (item === 'Anzeige' || item === 'Mein XWiki') {
+    if (item === 'anzeige' || item === 'mein xwiki') {
       await initializeSettings();
     }
   } catch (error) {
