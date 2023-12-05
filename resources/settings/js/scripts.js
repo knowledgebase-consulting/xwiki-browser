@@ -41,28 +41,45 @@ function setupEventListeners() {
       window.electronAPI.setFullscreen(event.target.checked);
     }
   });
-
-  // Event-Listener für den Speichern-Button (falls vorhanden)
-  const xwikiSaveButton = document.getElementById('saveXWikiServer');
-  if (xwikiSaveButton) {
-    xwikiSaveButton.addEventListener('click', async () => {
-      const url = document.getElementById('xwikiServerUrl').value;
-      if (isValidUrl(url)) {
-        await window.electronAPI.setStartUrl(url);
-      } else {
-        console.error('Ungültige URL:', url);
-      }
-    });
-  }
 }
 
 // Überprüfen, ob es sich um eine gültige URL handelt
-function isValidUrl(url) {
-  try {
-    new URL(url);
-    return true;
-  } catch (error) {
-    return false;
+function isValidUrl(str) {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)' + // protocol (http oder https erforderlich)
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,})' + // domain name (ohne Endpunkt)
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i'
+  );
+
+  return pattern.test(str);
+}
+
+
+// Setup des Event-Listeners für den "Speichern"-Button im "Mein XWiki"-Menü
+function setupXWikiServerSaveButtonListener() {
+  const xwikiSaveButton = document.getElementById('saveXWikiServer');
+  const xwikiServerInput = document.getElementById('xwikiServerUrl');
+  const feedbackElement = document.getElementById('urlFeedback');
+  if (xwikiSaveButton) {
+    xwikiServerInput.addEventListener('input', () => {
+      if (isValidUrl(xwikiServerInput.value)) {
+        feedbackElement.textContent = '';
+      } else {
+        feedbackElement.textContent = 'Bitte geben Sie eine gültige Serveradresse ein.';
+      }
+    });
+    xwikiSaveButton.addEventListener('click', async () => {
+      const urlInput = document.getElementById('xwikiServerUrl');
+      if (isValidUrl(urlInput.value)) {
+        await window.electronAPI.setStartUrl(urlInput.value);
+        feedbackElement.textContent = '';
+      } else {
+        feedbackElement.textContent = 'Bitte geben Sie eine gültige Serveradresse ein.';
+      }
+    });
   }
 }
 
@@ -73,7 +90,8 @@ async function loadMenuItems() {
     const menuItems = await window.menuAPI.getMenuItems();
     menuItems.forEach(item => {
       const li = document.createElement('li');
-      li.textContent = item.charAt(0).toUpperCase() + item.slice(1);
+      const displayName = item.replace('xwiki', 'XWiki');
+      li.textContent = displayName.charAt(0).toUpperCase() + displayName.slice(1);
       li.addEventListener('click', () => setVariableMenuItemContent(item));
       sidebar.appendChild(li);
     });
@@ -82,14 +100,18 @@ async function loadMenuItems() {
   }
 }
 
+
 // Laden des Inhalts der Menüpunkte
 async function setVariableMenuItemContent(item) {
   const content = document.querySelector('.content');
   try {
     const html = await window.menuAPI.getMenuItemContent(item);
     content.innerHTML = html;
-    if (item === 'anzeige' || item === 'mein xwiki') {
-      await initializeSettings();
+    if (item === 'anzeige') {
+      await initializeFullScreenSettings();
+    } else if (item === 'mein xwiki') {
+      await initializeXWikiServerSettings();
+      setupXWikiServerSaveButtonListener();
     }
   } catch (error) {
     console.error('Fehler beim Laden des Menüpunkts: ' + error.message);
