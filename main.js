@@ -115,7 +115,9 @@ app.on('ready', () => {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
     const Tray = new TrayGenerator(mainWindow);
-    //Tray.createTray();
+    if (!isMac) {
+      Tray.createTray();
+    }
     Menu.setApplicationMenu(menu);
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
