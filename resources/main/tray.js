@@ -45,7 +45,7 @@ class TrayGenerator {
     this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
   };
   createTray = () => {
-    this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.png"));
+    this.tray = new Tray(path.join(__dirname, "../images/kbc-logo.png"));
     this.tray.setIgnoreDoubleClickEvents(true);
     this.tray.on("click", this.toggleWindow);
     this.tray.on("right-click", this.rightClickMenu);
