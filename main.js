@@ -158,7 +158,7 @@ ipcMain.handle('get-fullscreen-setting', async () => {
   return settings.fullscreen;
 });
 //Start-URL aus den Einstellungen speichern
-ipcMain.handle('set-start-url', async (event, url) => {
+ipcMain.handle('set-start-url', (event, url) => {
   try {
     settings.xwikiServerUrl = url;
     saveSettings(settings);
@@ -198,7 +198,7 @@ ipcMain.handle('get-menu-item-content', async (event, menuItem) => {
   }
 });
 // Laden der App-Version
-ipcMain.handle('get-app-version', () => {
+ipcMain.handle('get-app-version', async () => {
   try {
     return app.getVersion();
   } catch (error) {
@@ -208,6 +208,6 @@ ipcMain.handle('get-app-version', () => {
 });
 // Laden der Start-URL aus den Nutzer-Einstellungen
 ipcMain.handle('get-start-url', async () => {
-  let settings = loadSettings();
+  let settings = await loadSettings();
   return settings.xwikiServerUrl;
 });
