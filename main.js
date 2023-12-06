@@ -49,7 +49,8 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 900,
-      fullscreen: settings.fullscreen || false,
+      fullscreen: isMac ? settings.fullscreen : false,
+      maximized: !isMac && settings.fullscreen,
       icon: path.resolve(basePath, './resources/images/kbc-logo.png'),
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
@@ -57,6 +58,9 @@ function createMainWindow() {
         nodeIntegration: false
       }
     });
+    if (!isMac && settings.fullscreen) {
+      mainWindow.maximize(); // Fenster maximieren, wenn nicht auf Mac
+    }
     // Aufrufen der Startseite beim Start
     mainWindow.loadURL(startUrl).catch(error => {
       console.error('Fehler beim Laden der URL: ', error);
@@ -114,9 +118,9 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const Tray = new TrayGenerator(mainWindow);
+    const tray = new TrayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
-      Tray.createTray();
+      tray.createTray();
     }
     Menu.setApplicationMenu(menu);
   } catch (error) {

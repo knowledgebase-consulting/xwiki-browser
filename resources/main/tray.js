@@ -6,8 +6,6 @@ class TrayGenerator {
     this.tray = null;
     this.mainWindow = mainWindow;
     this.createSettingsWindow = createSettingsWindowFn;
-    this.toggleWindow = this.toggleWindow.bind(this);
-    this.rightClickMenu = this.rightClickMenu.bind(this);
   }
   getWindowPosition = () => {
     const windowBounds = this.mainWindow.getBounds();
