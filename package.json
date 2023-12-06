@@ -51,7 +51,7 @@
     },
     "linux": {
       "artifactName": "xwiki-browser-${arch}.${ext}",
-      "icon": "./build/icon.png",
+      "icon": "build/icon.png",
       "category": "XWiki;Browser",
       "description": "XWiki Browser",
       "desktop": {
@@ -89,7 +89,7 @@
     },
     "win": {
       "artifactName": "xwiki-browser.${ext}",
-      "icon": "./build/icon.ico",
+      "icon": "build/icon.ico",
       "target": [
         {
           "arch": [
