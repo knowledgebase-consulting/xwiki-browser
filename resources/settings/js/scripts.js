@@ -46,11 +46,10 @@ function setupEventListeners() {
 // Überprüfen, ob es sich um eine gültige URL handelt
 function isValidUrl(str) {
   const pattern = new RegExp(
-    '^(https?:\\/\\/)' + // protocol (http oder https erforderlich)
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,})' + // domain name (ohne Endpunkt)
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    '^(https?:\\/\\/)' + // protocol
+    '([\\w\\d\\.-]+)\\.' + // subdomain
+    '([a-z\\.]{2,6})' + // domain name
+    '(:\\d+)?(\\/\\S*)?$', // port and path
     'i'
   );
 

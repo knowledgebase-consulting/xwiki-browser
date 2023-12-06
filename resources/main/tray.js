@@ -1,9 +1,11 @@
 const { Tray, Menu } = require("electron");
+const isMac = process.platform === 'darwin';
 const path = require("path");
 class TrayGenerator {
-  constructor(mainWindow) {
+  constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
     this.mainWindow = mainWindow;
+    this.createSettingsWindow = createSettingsWindowFn;
   }
   getWindowPosition = () => {
     const windowBounds = this.mainWindow.getBounds();
@@ -45,8 +47,11 @@ class TrayGenerator {
     this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
   };
   createTray = () => {
-    this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.png"));
-    this.tray.setIgnoreDoubleClickEvents(true);
+    if (isMac) {
+      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.png"));
+      } else {
+      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.ico"));
+      }    this.tray.setIgnoreDoubleClickEvents(true);
     this.tray.on("click", this.toggleWindow);
     this.tray.on("right-click", this.rightClickMenu);
   };

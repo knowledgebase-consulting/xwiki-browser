@@ -1,6 +1,6 @@
 {
   "name": "xwiki-browser",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "description": "The browser to browse your XWiki",
   "main": "./build/main.js",
   "scripts": {
@@ -28,6 +28,7 @@
     ],
     "mac": {
       "artifactName": "xwiki-browser.${ext}",
+      "icon": "./resources/imgages/kbc-logo.icns",
       "target": [
         {
           "arch": "universal",
@@ -56,6 +57,7 @@
     },
     "linux": {
       "artifactName": "xwiki-browser-${arch}.${ext}",
+      "icon": "./resources/imgages/kbc-logo.png",
       "category": "XWiki;Browser",
       "description": "XWiki Browser",
       "desktop": {
@@ -93,6 +95,7 @@
     },
     "win": {
       "artifactName": "xwiki-browser.${ext}",
+      "icon": "./resources/imgages/kbc-logo.ico",
       "target": [
         {
           "arch": [

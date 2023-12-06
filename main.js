@@ -50,6 +50,7 @@ function createMainWindow() {
       width: 1200,
       height: 900,
       fullscreen: settings.fullscreen || false,
+      icon: path.resolve(basePath, './resources/images/kbc-logo.png'),
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
         contextIsolation: true,
@@ -113,16 +114,12 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
+    const Tray = new TrayGenerator(mainWindow);
+    Tray.createTray();
     Menu.setApplicationMenu(menu);
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
   }
-});
-//Tray-Icon laden
-app.on('ready', () => {
-  createMainWindow();
-  const Tray = new TrayGenerator(mainWindow);
-  Tray.createTray();
 });
 // Auf dem Mac das Fenster nur schließen aber nicht das Programm beenden
 app.on('window-all-closed', () => {
