@@ -43,9 +43,12 @@ jobs:
             dist/latest-linux.yml
             dist/latest-linux-arm64.yml
             dist/xwiki-browser.dmg
+            dist/xwiki-browser.dmg.blockmap
             dist/xwiki-browser.zip
+            dist/xwiki-browser.zip.blockmap
             dist/latest-mac.yml
             dist/xwiki-browser.exe
+            dist/xwiki-browser.exe.blockmap
             dist/latest.yml
       - uses: "softprops/action-gh-release@v0.1.15"
         with:
@@ -62,7 +65,10 @@ jobs:
             dist/latest-linux.yml
             dist/latest-linux-arm64.yml
             dist/xwiki-browser.dmg
+            dist/xwiki-browser.dmg.blockmap
             dist/xwiki-browser.zip
+            dist/xwiki-browser.zip.blockmap
             dist/latest-mac.yml
             dist/xwiki-browser.exe
+            dist/xwiki-browser.exe.blockmap
             dist/latest.yml
