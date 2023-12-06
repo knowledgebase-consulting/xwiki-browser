@@ -1,6 +1,6 @@
 // Const initialisieren
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
-const { createMenu } = require('./menu.js');
+const { createMenu } = require('./resources/main/menu.js');
 const TrayGenerator  = require('./resources/main/tray.js');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
@@ -115,7 +115,9 @@ app.on('ready', () => {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
     const Tray = new TrayGenerator(mainWindow);
-    Tray.createTray();
+    if (!isMac) {
+      Tray.createTray();
+    }
     Menu.setApplicationMenu(menu);
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
