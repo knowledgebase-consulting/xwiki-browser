@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Willkommen bei der Knowledgebase Consulting und XWiki</title>
+<link rel="stylesheet" href="../css/styles.css">
+<!-- <script src="../js/scripts.js"> </script> -->
+</head> 
+<body>
+    <div class="logo-container"></div>
+    <div class="background-image-container"></div>
+    <div class="container">
+        <h1>Willkommen bei Ihrem XWiki-Browser</h1>
+        <p>Entdecken Sie XWiki - eine leistungsstarke, flexible und erweiterbare Open-Source-Wikisoftware für kollaboratives Arbeiten und Wissensaustausch.</p>
+        
+        <section>
+            <h2>XWiki: Ihre Plattform für Wissensmanagement</h2>
+            <p>XWiki ist mehr als nur ein Wiki. Es ist eine vielseitige Plattform, die durch einfache Bedienung, hohe Anpassungsfähigkeit und umfangreiche Funktionen wie Makros, Blogs, Foren, und ein ausgefeiltes Rechtssystem besticht.</p>
+            <p>Profitieren Sie von einer Software, die in über 30 Sprachen übersetzt ist und weltweit in mehr als 6000 Installationen genutzt wird.</p>
+        </section>
+
+        <section>
+            <h2>Knowledgebase Consulting: Ihr XWiki Premium Partner</h2>
+            <p>Als offizieller XWiki-Partner unterstützen wir Sie bei der Einführung, Anpassung und Wartung Ihres Unternehmenswikis. Unsere Expertise und Erfahrung garantieren maßgeschneiderte Lösungen für Ihre Bedürfnisse.</p>
+            <p>Von der Installation über die Schulung bis hin zur individuellen Anpassung - wir sind Ihr Partner für den Erfolg mit XWiki.</p>
+        </section>
+
+        <section>
+            <h2>Erfahren Sie mehr</h2>
+            <p>Besuchen Sie unsere <a href="https://unternehmens-wiki.de">Webseite</a>, um mehr über XWiki und unsere Dienstleistungen zu erfahren.</p>
+        </section>
+        
+        <section>
+            <h2>XWiki-Server festlegen und starten</h2>
+            <p>Starten Sie jetzt die <a href="#" id="openSettings">Einstellungen</a> und hinterlegen Sie Ihren XWiki-Server, um direkt durchzustarten.</p>
+        </section>
+    </div>
+</body>
+<script>
+    document.getElementById('openSettings').addEventListener('click', (event) => {
+      event.preventDefault();
+      window.electronAPI.openSettingsWindow();
+    });
+  </script> 
+</html>

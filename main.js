@@ -42,10 +42,10 @@ function createMainWindow() {
   try {
     // Laden der Start-URL oder nutzen des Standards
     const settings = loadSettings();
-    const startUrl = settings.xwikiServerUrl || 'https://unternehmens-wiki.de/';
-    // Const für das Laden der preload
+    const startUrl = settings.xwikiServerUrl;
+    const defaultFilePath = path.join(__dirname, '../resources/main/html/index.html');
     const basePath = isDev ? __dirname : app.getAppPath();
-    // Starten des Hauptfensters
+    // Konfiguration des Hauptfensters
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 900,
@@ -58,26 +58,33 @@ function createMainWindow() {
         nodeIntegration: false
       }
     });
+    // Fenster maximieren, wenn nicht auf Mac und Vollbild eingestellt
     if (!isMac && settings.fullscreen) {
-      mainWindow.maximize(); // Fenster maximieren, wenn nicht auf Mac
+      mainWindow.maximize();
     }
-    // Aufrufen der Startseite beim Start
-    mainWindow.loadURL(startUrl).catch(error => {
-      console.error('Fehler beim Laden der URL: ', error);
-    });
-    // Entfernen des Fensters beim Schließen
+    // Entscheiden, ob eine URL oder eine lokale Datei geladen wird
+    if (startUrl) {
+      mainWindow.loadURL(startUrl).catch(error => {
+        console.error('Fehler beim Laden der URL: ', error);
+      });
+    } else {
+      mainWindow.loadFile(defaultFilePath).catch(error => {
+        console.error('Fehler beim Laden der lokalen Datei: ', error);
+      });
+    }
+    // Event-Listener für das Schließen des Fensters
     mainWindow.on('closed', function () {
       mainWindow = null;
     });
-    //Fehlerbehandlung
   } catch (error) {
     console.error('Fehler beim Erstellen des Hauptfensters: ', error);
   }
-  // Electron-Update nutzen
+  // Automatische Updates prüfen
   if (!process.mas) {
     autoUpdater.checkForUpdatesAndNotify();
-  } 
+  }
 }
+
 // Funktion zum Erstellen des Einstellungsfensters
 function createSettingsWindow() {
   try {
@@ -217,4 +224,8 @@ ipcMain.handle('get-app-version', async () => {
 ipcMain.handle('get-start-url', async () => {
   let settings = await loadSettings();
   return settings.xwikiServerUrl;
+});
+//Settings-Window öffnen
+ipcMain.on('open-settings-window', () => {
+  createSettingsWindow();
 });
