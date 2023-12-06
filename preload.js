@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getStartUrl: async () => await ipcRenderer.invoke('get-start-url'),
   setStartUrl: async (url) => await ipcRenderer.invoke('set-start-url', url),
   getAppVersion: async () => await ipcRenderer.invoke('get-app-version'),
+  openSettingsWindow: () => ipcRenderer.send('open-settings-window'),
   closeSettingsWindow: () => ipcRenderer.send('close-settings-window'),
   setFullscreen: (flag) =>  ipcRenderer.send('set-fullscreen', flag),
   getFullscreenSetting: async () => {

@@ -31,29 +31,27 @@ class TrayGenerator {
       this.showWindow();
     }
   };
-  rightClickMenu = () => {
-    const menu = [
+  createTray = () => {
+    const iconPath = isMac ? path.join(__dirname, "../images/icon.png") : path.join(__dirname, "../images/icon.ico");
+    this.tray = new Tray(iconPath);
+  
+    const contextMenu = Menu.buildFromTemplate([
       {
         label: 'Einstellungen',
         click: () => {
-          createSettingsWindow();
+          this.createSettingsWindow();
         }
       },
       {
         role: 'quit',
         accelerator: 'Command+Q',
       },
-    ];
-    this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
-  };
-  createTray = () => {
-    if (isMac) {
-      this.tray = new Tray(path.join(__dirname, "../images/icon.png"));
-      } else {
-      this.tray = new Tray(path.join(__dirname, "../images/icon.ico"));
-      }    this.tray.setIgnoreDoubleClickEvents(true);
+    ]);
+  
+    this.tray.setContextMenu(contextMenu);
+    this.tray.setIgnoreDoubleClickEvents(true);
+  
     this.tray.on("click", this.toggleWindow);
-    this.tray.on("right-click", this.rightClickMenu);
   };
 }
 module.exports = TrayGenerator;
