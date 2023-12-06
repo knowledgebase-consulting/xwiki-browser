@@ -36,9 +36,13 @@ class TrayGenerator {
       {
         label: 'Einstellungen',
         click: () => {
-          createSettingsWindow();
-        }
-      },
+          if (!settingsWindow || settingsWindow.isDestroyed()) {
+              createSettingsWindow();
+          } else {
+              settingsWindow.show();
+          }
+          }
+      },  
       {
         role: 'quit',
         accelerator: 'Command+Q',
