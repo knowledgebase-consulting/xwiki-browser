@@ -1,9 +1,10 @@
 const { Tray, Menu } = require("electron");
 const path = require("path");
 class TrayGenerator {
-  constructor(mainWindow) {
+  constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
     this.mainWindow = mainWindow;
+    this.createSettingsWindow = createSettingsWindowFn;
   }
   getWindowPosition = () => {
     const windowBounds = this.mainWindow.getBounds();
@@ -51,4 +52,4 @@ class TrayGenerator {
     this.tray.on("right-click", this.rightClickMenu);
   };
 }
-module.exports = TrayGenerator;
+module.exports = { TrayGenerator };
