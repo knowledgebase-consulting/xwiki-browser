@@ -1,7 +1,7 @@
 // Const initialisieren
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
 const { createMenu } = require('./menu.js');
-const { TrayGenerator }  = require('./resources/main/tray.js');
+const TrayGenerator  = require('./resources/main/tray.js');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
@@ -50,6 +50,7 @@ function createMainWindow() {
       width: 1200,
       height: 900,
       fullscreen: settings.fullscreen || false,
+      icon: path.resolve(basePath, './resources/images/kbc-logo.png'),
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
         contextIsolation: true,

@@ -36,13 +36,9 @@ class TrayGenerator {
       {
         label: 'Einstellungen',
         click: () => {
-          if (!settingsWindow || settingsWindow.isDestroyed()) {
-              createSettingsWindow();
-          } else {
-              settingsWindow.show();
-          }
-          }
-      },  
+          createSettingsWindow();
+        }
+      },
       {
         role: 'quit',
         accelerator: 'Command+Q',
@@ -51,15 +47,13 @@ class TrayGenerator {
     this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
   };
   createTray = () => {
-    const basePath = isDev ? __dirname : app.getAppPath();
     if (isMac) {
-    this.tray = new Tray(path.resolve(basePath, "./resources/images/kbc-logo.png"));
-    } else {
-    this.tray = new Tray(path.resolve(basePath, "./resources/images/kbc-logo.ico"));
-    }
-    this.tray.setIgnoreDoubleClickEvents(true);
+      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.png"));
+      } else {
+      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.ico"));
+      }    this.tray.setIgnoreDoubleClickEvents(true);
     this.tray.on("click", this.toggleWindow);
     this.tray.on("right-click", this.rightClickMenu);
   };
 }
-module.exports = { TrayGenerator };
+module.exports = TrayGenerator;
