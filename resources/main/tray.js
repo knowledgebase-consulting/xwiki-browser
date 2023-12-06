@@ -32,8 +32,14 @@ class TrayGenerator {
   rightClickMenu = () => {
     const menu = [
       {
-        role: "quit",
-        accelerator: "Command+Q",
+        label: 'Einstellungen',
+        click: () => {
+          createSettingsWindow();
+        }
+      },
+      {
+        role: 'quit',
+        accelerator: 'Command+Q',
       },
     ];
     this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
