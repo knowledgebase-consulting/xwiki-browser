@@ -29,6 +29,7 @@
     "mac": {
       "artifactName": "xwiki-browser.${ext}",
       "target": "dmg",
+      "icon": "build/icon.icns",
       "category": "public.app-category.productivity",
       "darkModeSupport": true,
       "hardenedRuntime": true,
