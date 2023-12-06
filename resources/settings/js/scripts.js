@@ -57,13 +57,16 @@ function setupEventListeners() {
 }
 
 // Überprüfen, ob es sich um eine gültige URL handelt
-function isValidUrl(url) {
-  try {
-    new URL(url);
-    return true;
-  } catch (error) {
-    return false;
-  }
+function isValidUrl(str) {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)' + // protocol
+    '([\\w\\d\\.-]+)\\.' + // subdomain
+    '([a-z\\.]{2,6})' + // domain name
+    '(:\\d+)?(\\/\\S*)?$', // port and path
+    'i'
+  );
+
+  return pattern.test(str);
 }
 
 // Laden der Menüpunkte im Einstellungsfenster
