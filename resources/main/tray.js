@@ -48,9 +48,9 @@ class TrayGenerator {
   };
   createTray = () => {
     if (isMac) {
-      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.png"));
+      this.tray = new Tray(path.join(__dirname, "../images/icon.png"));
       } else {
-      this.tray = new Tray(path.join(__dirname, "./resources/images/kbc-logo.ico"));
+      this.tray = new Tray(path.join(__dirname, "../images/icon.ico"));
       }    this.tray.setIgnoreDoubleClickEvents(true);
     this.tray.on("click", this.toggleWindow);
     this.tray.on("right-click", this.rightClickMenu);
