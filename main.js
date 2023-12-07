@@ -125,7 +125,7 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new TrayGenerator(mainWindow, createSettingsWindow);
+    const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
       tray.createTray();
     } else {
