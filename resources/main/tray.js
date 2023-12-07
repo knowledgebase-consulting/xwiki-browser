@@ -2,7 +2,7 @@ const { Tray, Menu } = require("electron");
 const isMac = process.platform === 'darwin';
 const isDev = require('electron-is-dev');
 const path = require("path");
-class TrayGenerator {
+class trayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
     this.mainWindow = mainWindow;
@@ -61,4 +61,4 @@ class TrayGenerator {
     this.tray.on("click", this.toggleWindow);
   };
 }
-module.exports = TrayGenerator;
+module.exports = { trayGenerator };
