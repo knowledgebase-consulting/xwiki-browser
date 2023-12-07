@@ -34,7 +34,7 @@ class trayGenerator {
   };
   createTray = () => {
     const basePath = isDev ? __dirname : app.getAppPath();
-    const iconPath = isMac ? path.resolve(basePath, "icon.png") : path.resolve(basePath, "icon.ico");
+    const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
     this.tray = new Tray(iconPath);
   
     const contextMenu = Menu.buildFromTemplate([
