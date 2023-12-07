@@ -34,7 +34,7 @@ class TrayGenerator {
   };
   createTray = () => {
     const basePath = isDev ? __dirname : app.getAppPath();
-    const iconPath = isMac ? path.resolve(basePath, "./build/icon.png") : path.resolve(basePath, "./build/icon.ico");
+    const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
     this.tray = new Tray(iconPath);
   
     const contextMenu = Menu.buildFromTemplate([
@@ -44,10 +44,15 @@ class TrayGenerator {
           this.createSettingsWindow();
         }
       },
+      { role:'toggleDevTools'
+      },
+      { type: 'separator' 
+      },
       {
         role: 'quit',
-        accelerator: 'Command+Q',
+        accelerator: 'Command+Q'
       },
+
     ]);
   
     this.tray.setContextMenu(contextMenu);
