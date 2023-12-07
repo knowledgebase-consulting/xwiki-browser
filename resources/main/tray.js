@@ -1,5 +1,6 @@
 const { Tray, Menu } = require("electron");
 const isMac = process.platform === 'darwin';
+const isDev = require('electron-is-dev');
 const path = require("path");
 class TrayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
@@ -32,7 +33,8 @@ class TrayGenerator {
     }
   };
   createTray = () => {
-    const iconPath = isMac ? path.join(__dirname, "../images/icon.png") : path.join(__dirname, "../images/icon.ico");
+    const basePath = isDev ? __dirname : app.getAppPath();
+    const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
     this.tray = new Tray(iconPath);
   
     const contextMenu = Menu.buildFromTemplate([
@@ -42,10 +44,15 @@ class TrayGenerator {
           this.createSettingsWindow();
         }
       },
+      { role:'toggleDevTools'
+      },
+      { type: 'separator' 
+      },
       {
         role: 'quit',
-        accelerator: 'Command+Q',
+        accelerator: 'Command+Q'
       },
+
     ]);
   
     this.tray.setContextMenu(contextMenu);
