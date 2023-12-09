@@ -53,7 +53,7 @@ function createMainWindow() {
       height: 900,
       fullscreen: isMac ? settings.fullscreen : false,
       maximized: !isMac && settings.fullscreen,
-      icon: path.resolve(basePath, './resources/images/kbc-logo.png'),
+      icon: path.resolve(basePath, './build/kbc-logo.png'),
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
         contextIsolation: true,

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const electron = require('electron');
-const app = electron.app || electron.remote.app;
+const { app } = require('electron');
 
 const logFilePath = path.join(app.getPath('userData'), 'app.log');
 
