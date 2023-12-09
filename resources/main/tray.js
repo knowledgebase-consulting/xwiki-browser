@@ -1,3 +1,4 @@
+const logToFile = require('../log/log.js');
 const { Tray, Menu } = require("electron");
 const isMac = process.platform === 'darwin';
 const isDev = require('electron-is-dev');
@@ -33,32 +34,31 @@ class trayGenerator {
     }
   };
   createTray = () => {
-    const basePath = isDev ? __dirname : app.getAppPath();
-    const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
-    this.tray = new Tray(iconPath);
+    try {
+      const basePath = isDev ? __dirname : app.getAppPath();
+      const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
+      this.tray = new Tray(iconPath);
   
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: 'Einstellungen',
-        click: () => {
-          this.createSettingsWindow();
-        }
-      },
-      { role:'toggleDevTools'
-      },
-      { type: 'separator' 
-      },
-      {
-        role: 'quit',
-        accelerator: 'Command+Q'
-      },
-
-    ]);
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Einstellungen',
+          click: () => {
+            this.createSettingsWindow();
+          }
+        },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        {
+          role: 'quit',
+          accelerator: 'Command+Q'
+        },
+      ]);
   
-    this.tray.setContextMenu(contextMenu);
-    this.tray.setIgnoreDoubleClickEvents(true);
-  
-    this.tray.on("click", this.toggleWindow);
+      this.tray.setContextMenu(contextMenu);
+      this.tray.setIgnoreDoubleClickEvents(true);
+      this.tray.on("click", this.toggleWindow);
+    } catch (error) {
+      logToFile(`Fehler beim Erstellen des Tray: ${error.message}`);
+    }
   };
 }
-module.exports = { trayGenerator };

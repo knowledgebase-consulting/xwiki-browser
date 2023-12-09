@@ -11,6 +11,8 @@ const fs = require('fs');
 const isMac = process.platform === 'darwin';
 // Pfad für die Speicherung der Benutzereinstellungen
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
+//Logging
+const logToFile = require('./resources/log/log.js');
 // Globale Referenzen auf die Haupt- und Einstellungsfenster
 let mainWindow;
 let settingsWindow;
