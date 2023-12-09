@@ -232,3 +232,6 @@ ipcMain.handle('get-start-url', async () => {
 ipcMain.on('open-settings-window', () => {
   createSettingsWindow();
 });
+process.on('uncaughtException', (error) => {
+  logToFile(`Unerwarteter Fehler: ${error.message}`);
+});
