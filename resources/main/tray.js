@@ -1,8 +1,8 @@
-const logToFile = require('../log/log.js');
 const { Tray, Menu } = require("electron");
 const isMac = process.platform === 'darwin';
 const isDev = require('electron-is-dev');
 const path = require("path");
+const logToFile = require('../log/log.js');
 class trayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
@@ -62,3 +62,4 @@ class trayGenerator {
     }
   };
 }
+module.exports = { trayGenerator };
