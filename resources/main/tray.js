@@ -1,4 +1,4 @@
-const { app, Tray, Menu } = require("electron");
+const { Tray, Menu } = require("electron");
 const isMac = process.platform === 'darwin';
 const isDev = require('electron-is-dev');
 const path = require("path");
@@ -35,9 +35,8 @@ class trayGenerator {
   };
   createTray = () => {
     try {
-      const iconFileName = isMac ? 'icon.png' : 'icon.ico';
-      const iconPath = path.join(process.resourcesPath, 'images', iconFileName);
-      this.tray = new Tray(iconPath);
+      const iconPath = path.join(process.resourcesPath, 'build', 'icon.png');
+      this.tray = new Tray(iconPath);      
   
       const contextMenu = Menu.buildFromTemplate([
         {
