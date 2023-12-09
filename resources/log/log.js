@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { app } = require('electron');
 
-const logFilePath = path.join(app.getPath('userData'), 'app.log');
+const logFilePath = path.join(app.getPath('userData'), 'log.log');
 
 function logToFile(message) {
   const timestamp = new Date().toISOString();
