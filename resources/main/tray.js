@@ -1,8 +1,7 @@
-const { Tray, Menu } = require("electron");
-const isMac = process.platform === 'darwin';
-const isDev = require('electron-is-dev');
-const path = require("path");
-class TrayGenerator {
+const { Tray, nativeImage, Menu } = require('electron');
+const path = require('path');
+const logToFile = require('../log/log.js');
+class trayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
     this.mainWindow = mainWindow;
@@ -33,32 +32,31 @@ class TrayGenerator {
     }
   };
   createTray = () => {
-    const basePath = isDev ? __dirname : app.getAppPath();
-    const iconPath = isMac ? path.resolve(basePath, "../images/icon.png") : path.resolve(basePath, "../images/icon.ico");
-    this.tray = new Tray(iconPath);
-  
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: 'Einstellungen',
-        click: () => {
-          this.createSettingsWindow();
-        }
-      },
-      { role:'toggleDevTools'
-      },
-      { type: 'separator' 
-      },
-      {
-        role: 'quit',
-        accelerator: 'Command+Q'
-      },
+    try {
+      const iconPath = nativeImage.createFromPath(path.join(__dirname, "../images/icon.png"))
+      this.tray = new Tray(iconPath);
 
-    ]);
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Einstellungen',
+          click: () => {
+            this.createSettingsWindow();
+          }
+        },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        {
+          role: 'quit',
+          accelerator: 'Command+Q'
+        },
+      ]);
   
-    this.tray.setContextMenu(contextMenu);
-    this.tray.setIgnoreDoubleClickEvents(true);
-  
-    this.tray.on("click", this.toggleWindow);
+      this.tray.setContextMenu(contextMenu);
+      this.tray.setIgnoreDoubleClickEvents(true);
+      this.tray.on("click", this.toggleWindow);
+    } catch (error) {
+      logToFile(`Fehler beim Erstellen des Tray: ${error.message}`);
+    }
   };
 }
-module.exports = TrayGenerator;
+module.exports = { trayGenerator };

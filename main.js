@@ -1,7 +1,7 @@
 // Const initialisieren
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
-const TrayGenerator  = require('./resources/main/tray.js');
+const { trayGenerator }  = require('./resources/main/tray.js');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
@@ -11,6 +11,8 @@ const fs = require('fs');
 const isMac = process.platform === 'darwin';
 // Pfad für die Speicherung der Benutzereinstellungen
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
+//Logging
+const logToFile = require('./resources/log/log.js');
 // Globale Referenzen auf die Haupt- und Einstellungsfenster
 let mainWindow;
 let settingsWindow;
@@ -51,7 +53,7 @@ function createMainWindow() {
       height: 900,
       fullscreen: isMac ? settings.fullscreen : false,
       maximized: !isMac && settings.fullscreen,
-      icon: path.resolve(basePath, './resources/images/kbc-logo.png'),
+      icon: path.resolve(basePath, './build/icon.png'),
       webPreferences: {
         preload: path.resolve(basePath, './build/preload.js'),
         contextIsolation: true,
@@ -125,7 +127,7 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new TrayGenerator(mainWindow, createSettingsWindow);
+    const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
       tray.createTray();
     } else {
@@ -229,4 +231,7 @@ ipcMain.handle('get-start-url', async () => {
 //Settings-Window öffnen
 ipcMain.on('open-settings-window', () => {
   createSettingsWindow();
+});
+process.on('uncaughtException', (error) => {
+  logToFile(`Unerwarteter Fehler: ${error.message}`);
 });
