@@ -1,6 +1,4 @@
 const { Tray, nativeImage, Menu } = require('electron');
-const isMac = process.platform === 'darwin';
-const isDev = require('electron-is-dev');
 const path = require('path');
 const logToFile = require('../log/log.js');
 class trayGenerator {
@@ -35,7 +33,7 @@ class trayGenerator {
   };
   createTray = () => {
     try {
-      const iconPath = nativeImage.createFromPath(path.join(__dirname, "resources", "images", "icon.png"))
+      const iconPath = nativeImage.createFromPath(path.join(__dirname, "../images/icon.png"))
       this.tray = new Tray(iconPath);
 
       const contextMenu = Menu.buildFromTemplate([
