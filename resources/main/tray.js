@@ -1,7 +1,7 @@
 const { Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
 
-class TrayGenerator {
+class trayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
     this.tray = null;
     this.mainWindow = mainWindow;
@@ -58,4 +58,4 @@ class TrayGenerator {
   }
 }
 
-module.exports = TrayGenerator;
+module.exports = trayGenerator;

@@ -1,8 +1,8 @@
 // Const initialisieren
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
-const { trayGenerator }  = require('./resources/main/tray.js');
 const { autoUpdater } = require('electron-updater');
+const trayGenerator  = require('./resources/main/tray.js');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
