@@ -45,7 +45,7 @@ function createMainWindow() {
     // Laden der Start-URL oder nutzen des Standards
     const settings = loadSettings();
     const startUrl = settings.xwikiServerUrl;
-    const defaultFilePath = path.join(__dirname, '../resources/main/html/index.html');
+    const defaultFilePath = path.join(__dirname, 'resources/main/html/index.html');
     const basePath = isDev ? __dirname : app.getAppPath();
     // Konfiguration des Hauptfensters
     mainWindow = new BrowserWindow({
