@@ -1,7 +1,7 @@
-const { Tray, nativeImage, Menu } = require("electron");
+const { Tray, nativeImage, Menu } = require('electron');
 const isMac = process.platform === 'darwin';
 const isDev = require('electron-is-dev');
-const path = require("path");
+const path = require('path');
 const logToFile = require('../log/log.js');
 class trayGenerator {
   constructor(mainWindow, createSettingsWindowFn) {
