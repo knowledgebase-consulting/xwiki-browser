@@ -35,8 +35,8 @@ class trayGenerator {
   };
   createTray = () => {
     try {
-      const iconPath = path.join(__dirname, '../../build/icon.png');
-      this.tray = new Tray(nativeImage.createFromPath(iconPath));
+      const iconPath = path.join(__dirname, '../images/icon.ico');
+      this.tray = new Tray(iconPath);
 
       const contextMenu = Menu.buildFromTemplate([
         {
