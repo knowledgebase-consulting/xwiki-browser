@@ -1,4 +1,4 @@
-const { app, ipcRenderer, Menu, MenuItem } = require('electron');
+const { app, Menu } = require('electron');
 const isMac = process.platform === 'darwin';
 const packageJson = require('../../package.json');
 app.name = packageJson.build.productName;
