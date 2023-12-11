@@ -1,21 +1,26 @@
+// ----------------------------------------------------------------------------------------------------------
 // Const initialisieren
-const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
-const { trayGenerator }  = require('./resources/main/tray.js');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
 const fs = require('fs');
+// ----------------------------------------------------------------------------------------------------------
 // Überprüfen, ob es sich um eine macOS-Plattform handelt
 const isMac = process.platform === 'darwin';
 // Pfad für die Speicherung der Benutzereinstellungen
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 //Logging
 const logToFile = require('./resources/log/log.js');
+// ----------------------------------------------------------------------------------------------------------
 // Globale Referenzen auf die Haupt- und Einstellungsfenster
 let mainWindow;
 let settingsWindow;
+let tray;
+// ----------------------------------------------------------------------------------------------------------
+// Benutzereinstellungen
 // Laden der Benutzereinstellungen beim Start
 let settings = loadSettings();
 // Funktion zum Laden der Benutzereinstellungen
@@ -31,6 +36,7 @@ function loadSettings() {
     return {};
   }
 }
+// ----------------------------------------------------------------------------------------------------------
 // Funktion zum Speichern der Benutzereinstellungen
 function saveSettings(settings) {
   try {
@@ -39,13 +45,14 @@ function saveSettings(settings) {
     console.error('Fehler beim Speichern der Einstellungen: ', error);
   }
 }
+// ----------------------------------------------------------------------------------------------------------
 // Funktion zum Erstellen des Hauptfensters
 function createMainWindow() {
   try {
     // Laden der Start-URL oder nutzen des Standards
     const settings = loadSettings();
     const startUrl = settings.xwikiServerUrl;
-    const defaultFilePath = path.join(__dirname, '../resources/main/html/index.html');
+    const defaultFilePath = path.join(__dirname, 'resources/main/html/index.html');
     const basePath = isDev ? __dirname : app.getAppPath();
     // Konfiguration des Hauptfensters
     mainWindow = new BrowserWindow({
@@ -86,7 +93,7 @@ function createMainWindow() {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
+// ----------------------------------------------------------------------------------------------------------
 // Funktion zum Erstellen des Einstellungsfensters
 function createSettingsWindow() {
   try {
@@ -121,17 +128,60 @@ function createSettingsWindow() {
     console.error('Fehler beim Erstellen des Einstellungsfensters: ', error);
   }
 }
+// ----------------------------------------------------------------------------------------------------------
+// Tray
+function createTray(mainWindow, createSettingsWindow) {
+  try {
+    const basePath = isDev ? __dirname : app.getAppPath();
+    const iconPath = nativeImage.createFromPath(path.resolve(basePath, "./build/icon.png"));
+    tray = new Tray(iconPath);
+
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Einstellungen',
+        click: () => createSettingsWindow()
+      },
+      { type: 'separator' },
+      { role: 'quit', accelerator: 'Command+Q' },
+    ]);
+
+    tray.setContextMenu(contextMenu);
+    tray.setIgnoreDoubleClickEvents(true);
+    tray.on("click", () => {
+      if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        const position = getWindowPosition(mainWindow, tray);
+        mainWindow.setPosition(position.x, position.y, false);
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    });
+  } catch (error) {
+    logToFile(`Fehler beim Erstellen des Tray: ${error.message}`);
+  }
+}
+
+ function getWindowPosition (mainWindow, tray) {
+    const windowBounds = mainWindow.getBounds();
+    const trayBounds = tray.getBounds();
+    const x = Math.round(
+      trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2
+    );
+    const y = Math.round(trayBounds.y + trayBounds.height);
+    return { x, y };
+  };
+// ----------------------------------------------------------------------------------------------------------
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
 app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
-      tray.createTray();
+      createTray();
     } else {
-    Menu.setApplicationMenu(menu);
+      Menu.setApplicationMenu(menu);
     }
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
@@ -153,6 +203,7 @@ app.on('activate', () => {
     console.error('Fehler beim Reaktivieren der App: ', error);
   }
 });
+// ----------------------------------------------------------------------------------------------------------
 // IPC Event-Handler für die Kommunikation zwischen Renderer- und Hauptprozess
 // Beim Schließen des Einstellungsfensters dieses sauber beenden
 ipcMain.on('close-settings-window', () => {
