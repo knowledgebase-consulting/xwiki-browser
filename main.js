@@ -2,7 +2,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
 const { autoUpdater } = require('electron-updater');
-const TrayGenerator  = require('./resources/main/tray.js');
+const { trayGenerator } = require('./resources/main/tray.js');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -126,11 +126,12 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new TrayGenerator(mainWindow, createSettingsWindow);
+    const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
       tray.createTray();
-    }
+    } else {
     Menu.setApplicationMenu(menu);
+    }
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
   }
