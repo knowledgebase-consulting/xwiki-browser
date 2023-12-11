@@ -1,8 +1,8 @@
 // Const initialisieren
-const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
 const { autoUpdater } = require('electron-updater');
-const { TrayGenerator }  = require('./resources/main/tray.js');
+const TrayGenerator  = require('./resources/main/tray.js');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -122,18 +122,17 @@ function createSettingsWindow() {
 }
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
-let tray = null;
 app.on('ready', () => {
-  createMainWindow();
-  const menu = createMenu(createSettingsWindow, settingsWindow);
-  Menu.setApplicationMenu(menu);
-
-  if (!isMac) {
-    const iconPath = path.join(__dirname, 'build/icon.png');
-    const icon = nativeImage.createFromPath(iconPath);
-    tray = new Tray(icon);
-    const trayGenerator = new TrayGenerator(mainWindow, createSettingsWindow, tray);
-    trayGenerator.createTray();
+  try {
+    createMainWindow();
+    const menu = createMenu(createSettingsWindow, settingsWindow);
+    const tray = new TrayGenerator(mainWindow, createSettingsWindow);
+    if (!isMac) {
+      tray.createTray();
+    }
+    Menu.setApplicationMenu(menu);
+  } catch (error) {
+    console.error('Fehler beim App-Start: ', error);
   }
 });
 // Auf dem Mac das Fenster nur schließen aber nicht das Programm beenden
