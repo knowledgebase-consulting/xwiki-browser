@@ -1,4 +1,4 @@
-const { Tray, nativeImage, Menu } = require('electron');
+const { app, Tray, nativeImage, Menu } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const logToFile = require('../log/log.js');
