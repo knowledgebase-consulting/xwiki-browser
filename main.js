@@ -1,8 +1,8 @@
 // Const initialisieren
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
 const { autoUpdater } = require('electron-updater');
-const { trayGenerator } = require('./resources/main/tray.js');
+// const { trayGenerator } = require('./resources/main/tray.js');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -16,6 +16,7 @@ const logToFile = require('./resources/log/log.js');
 // Globale Referenzen auf die Haupt- und Einstellungsfenster
 let mainWindow;
 let settingsWindow;
+let tray;
 // Laden der Benutzereinstellungen beim Start
 let settings = loadSettings();
 // Funktion zum Laden der Benutzereinstellungen
@@ -120,15 +121,41 @@ function createSettingsWindow() {
     console.error('Fehler beim Erstellen des Einstellungsfensters: ', error);
   }
 }
+
+function createTray() {
+  const basePath = isDev ? __dirname : app.getAppPath();
+  const iconPath = path.resolve(basePath, './build/icon.png');
+  const icon = nativeImage.createFromPath(iconPath);
+  tray = new Tray(icon);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Einstellungen',
+      click: () => {
+        this.createSettingsWindow();
+      }
+    },
+    { type: 'separator' },
+    {
+      role: 'quit',
+      accelerator: 'Command+Q'
+    },
+  ]);
+
+  tray.setToolTip('Meine Electron-Anwendung');
+  tray.setIgnoreDoubleClickEvents(true);
+  tray.setContextMenu(contextMenu);
+};
+
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
 app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new trayGenerator(mainWindow, createSettingsWindow);
+    // const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
-      tray.createTray();
+      createTray();
     } else {
     Menu.setApplicationMenu(menu);
     }
