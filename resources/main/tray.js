@@ -35,7 +35,7 @@ class trayGenerator {
 
   createTray() {
     try {
-      const iconPath = path.join(__dirname, 'bin/resources/images/icon.png');
+      const iconPath = path.join(__dirname, 'resources/images/icon.png');
       const icon = nativeImage.createFromPath(iconPath);
       this.tray = new Tray(icon);
 
@@ -44,12 +44,11 @@ class trayGenerator {
           label: 'Einstellungen',
           click: () => this.createSettingsWindow()
         },
-        { role: 'toggleDevTools' },
         { type: 'separator' },
         { role: 'quit' }
       ]);
 
-      this.tray.setToolTip('Meine Electron-Anwendung');
+      this.tray.setToolTip('XWiki Browser');
       this.tray.setContextMenu(contextMenu);
       this.tray.on('click', () => this.toggleWindow());
     } catch (error) {
