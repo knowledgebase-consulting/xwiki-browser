@@ -127,14 +127,17 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    const tray = new trayGenerator(mainWindow, createSettingsWindow);
-    if (!isMac) {
-      tray.createTray();
-    } else {
+    if (isMac) {
     Menu.setApplicationMenu(menu);
     }
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
+  }
+});
+app.whenReady().then(() => {
+  const tray = new trayGenerator(mainWindow, createSettingsWindow);
+  if (!isMac) {
+    tray.createTray();
   }
 });
 // Auf dem Mac das Fenster nur schließen aber nicht das Programm beenden
