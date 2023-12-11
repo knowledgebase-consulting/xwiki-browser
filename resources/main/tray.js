@@ -1,11 +1,10 @@
-const { Tray, Menu, nativeImage } = require('electron');
-const path = require('path');
+const { Menu } = require('electron');
 
-class trayGenerator {
-  constructor(mainWindow, createSettingsWindowFn) {
-    this.tray = null;
+class TrayGenerator {
+  constructor(mainWindow, createSettingsWindowFn, tray) {
     this.mainWindow = mainWindow;
     this.createSettingsWindow = createSettingsWindowFn;
+    this.tray = tray;
   }
 
   getWindowPosition() {
@@ -35,20 +34,17 @@ class trayGenerator {
 
   createTray() {
     try {
-      const iconPath = path.join(__dirname, 'resources/images/icon.png');
-      const icon = nativeImage.createThumbnailFromPath(iconPath, {width:32, height:32});
-      this.tray = new Tray(icon);
-
       const contextMenu = Menu.buildFromTemplate([
         {
           label: 'Einstellungen',
           click: () => this.createSettingsWindow()
         },
+        { role: 'toggleDevTools' },
         { type: 'separator' },
         { role: 'quit' }
       ]);
 
-      this.tray.setToolTip('XWiki Browser');
+      this.tray.setToolTip('Meine Electron-Anwendung');
       this.tray.setContextMenu(contextMenu);
       this.tray.on('click', () => this.toggleWindow());
     } catch (error) {
@@ -57,4 +53,4 @@ class trayGenerator {
   }
 }
 
-module.exports = trayGenerator;
+module.exports = { TrayGenerator };

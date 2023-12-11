@@ -107,11 +107,11 @@ function createMenu(createSettingsWindow, settingsWindow) {
         }*/
     ]
     
-    /*if (isMac) {*/
+     if(isMac) {
         return Menu.buildFromTemplate(template);
-    /*} else {
+    } else {
         Menu.setApplicationMenu(null);
-    }*/
+    }
 }
 
 module.exports = { createMenu };
