@@ -2,7 +2,7 @@
 const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } = require('electron');
 const { createMenu } = require('./resources/main/menu.js');
 const { autoUpdater } = require('electron-updater');
-// const { trayGenerator } = require('./resources/main/tray.js');
+const { createTray } = require('./resources/main/tray.js');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const path = require('path');
@@ -122,7 +122,7 @@ function createSettingsWindow() {
   }
 }
 
-function createTray() {
+/*function createTray() {
   const basePath = isDev ? __dirname : app.getAppPath();
   const iconPath = path.resolve(basePath, './build/icon.png');
   const icon = nativeImage.createFromPath(iconPath);
@@ -145,7 +145,7 @@ function createTray() {
   tray.setToolTip('Meine Electron-Anwendung');
   tray.setIgnoreDoubleClickEvents(true);
   tray.setContextMenu(contextMenu);
-};
+};*/
 
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
@@ -153,11 +153,10 @@ app.on('ready', () => {
   try {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
-    // const tray = new trayGenerator(mainWindow, createSettingsWindow);
     if (!isMac) {
-      createTray();
+      createTray(mainWindow, createSettingsWindow);
     } else {
-    Menu.setApplicationMenu(menu);
+      Menu.setApplicationMenu(menu);
     }
   } catch (error) {
     console.error('Fehler beim App-Start: ', error);
