@@ -36,7 +36,7 @@ class trayGenerator {
   createTray() {
     try {
       const iconPath = path.join(__dirname, 'resources/images/icon.png');
-      const icon = nativeImage.createThumbnailFromPath(iconPath, {width: 32, height:32});
+      const icon = nativeImage.createThumbnailFromPath(iconPath, {width:32, height:32});
       this.tray = new Tray(icon);
 
       const contextMenu = Menu.buildFromTemplate([
