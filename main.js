@@ -160,7 +160,7 @@ function createTray(mainWindow, createSettingsWindow) {
   } catch (error) {
     logToFile(`Fehler beim Erstellen des Tray: ${error.message}`);
   }
-};
+}
 function getWindowPosition (mainWindow, tray) {
   const windowBounds = mainWindow.getBounds();
   const trayBounds = tray.getBounds();
@@ -169,7 +169,7 @@ function getWindowPosition (mainWindow, tray) {
   );
   const y = Math.round(trayBounds.y + trayBounds.height);
   return { x, y };
-};
+}
 // ----------------------------------------------------------------------------------------------------------
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
