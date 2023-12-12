@@ -1,5 +1,5 @@
 # XWiki Browser
-
+Wir sind noch ganz am Anfang.
 ![Pre-Relase Status](https://github.com/knowledgebase-consulting/XWiki-Browser/actions/workflows/pre-release.yml/badge.svg)
 
 ## Überblick
