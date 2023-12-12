@@ -1,5 +1,7 @@
 # XWiki Browser
 
+![Pre-Relase Status](https://github.com/knowledgebase-consulting/XWiki-Browser/actions/workflows/pre-release.yml/badge.svg)
+
 ## Überblick
 Der XWiki Browser ist eine speziell entwickelte Electron-Anwendung, die darauf abzielt, die Interaktion mit XWiki-Instanzen zu vereinfachen und zu optimieren. Dieses Tool bietet eine nahtlose und integrierte Benutzererfahrung für die effiziente Navigation und Verwaltung von XWiki-Inhalten.
 
