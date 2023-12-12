@@ -161,16 +161,15 @@ function createTray(mainWindow, createSettingsWindow) {
     logToFile(`Fehler beim Erstellen des Tray: ${error.message}`);
   }
 }
-
- function getWindowPosition (mainWindow, tray) {
-    const windowBounds = mainWindow.getBounds();
-    const trayBounds = tray.getBounds();
-    const x = Math.round(
-      trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2
-    );
-    const y = Math.round(trayBounds.y + trayBounds.height);
-    return { x, y };
-  };
+function getWindowPosition (mainWindow, tray) {
+  const windowBounds = mainWindow.getBounds();
+  const trayBounds = tray.getBounds();
+  const x = Math.round(
+    trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2
+  );
+  const y = Math.round(trayBounds.y + trayBounds.height);
+  return { x, y };
+}
 // ----------------------------------------------------------------------------------------------------------
 // Event-Listener für die Electron-App
 // Das Hauptfenster starten und das Menü laden
@@ -179,7 +178,7 @@ app.on('ready', () => {
     createMainWindow();
     const menu = createMenu(createSettingsWindow, settingsWindow);
     if (!isMac) {
-      createTray();
+      createTray(mainWindow, createSettingsWindow);
     } else {
       Menu.setApplicationMenu(menu);
     }
