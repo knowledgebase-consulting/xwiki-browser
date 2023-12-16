@@ -10,8 +10,6 @@ const fs = require('fs');
 // ----------------------------------------------------------------------------------------------------------
 // Überprüfen, ob es sich um eine macOS-Plattform handelt
 const isMac = process.platform === 'darwin';
-// Pfad für die Speicherung der Benutzereinstellungen
-const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 //Logging
 const logToFile = require('./resources/log/log.js');
 // ----------------------------------------------------------------------------------------------------------
@@ -21,6 +19,8 @@ let settingsWindow;
 let tray;
 // ----------------------------------------------------------------------------------------------------------
 // Benutzereinstellungen
+// Pfad für die Speicherung der Benutzereinstellungen
+const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 // Laden der Benutzereinstellungen beim Start
 let settings = loadSettings();
 // Funktion zum Laden der Benutzereinstellungen
